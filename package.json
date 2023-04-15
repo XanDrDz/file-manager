@@ -1,0 +1,23 @@
+{
+  "name": "file-manager",
+  "version": "1.0.0",
+  "description": "This repository is the part of file-manager task",
+  "type": "module",
+  "scripts": {
+    "start": "node src/file-manager.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XanDrDz/file-manager"
+  },
+  "keywords": [
+    "nodejs",
+    "file-manager"
+  ],
+  "author": "XanDrDz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/XanDrDz/file-manager"
+  },
+  "homepage": "https://github.com/XanDrDz/file-manager/blob/main/README.md"
+}
