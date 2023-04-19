@@ -1,8 +1,11 @@
 import { printUserInfo } from './general.js'
 import { Transform } from 'stream';
-import { printCurrentWorkingDirectory } from './navigation.js'
+import { homeDir } from './system-info.js';
+
+process.chdir(homeDir);
 
 const args = process.argv.slice(2);
+let currentWorkingDirectory = process.cwd();
 let currentChunk = ''
 
 await printUserInfo(args)
@@ -19,5 +22,8 @@ const transform = async () => {
   
     process.stdin.pipe(stream);
 };
-
 await transform();
+
+function printCurrentWorkingDirectory() {
+    console.log(`You are currently in ${currentWorkingDirectory}`);
+}

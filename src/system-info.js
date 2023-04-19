@@ -1,5 +1,5 @@
 import os from 'os'
 
-const homeDir = os.homedir();
-const username = os.userInfo().username;
-const cpus = os.cpus();
+export const homeDir = os.homedir(); 
+export const username = os.userInfo().username;
+export const cpus = os.cpus();
