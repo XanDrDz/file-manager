@@ -6,7 +6,7 @@ import { getUpperDirectory } from './navigation.js';
 import { getUserName } from './user.js';
 import { COMMANDS } from './commands.js';
 import { printAllFiles } from './navigation.js'
-import { readAndPrint, addFile, rename, copy, move } from './basic-operations.js'
+import {readAndPrint, addFile, rename, copy, moveFile, deleteFile} from './basic-operations.js'
 import path from 'path';
 import fs from 'fs'
 
@@ -61,16 +61,10 @@ rl.on('line', (input) => {
       copy(currentDirectory, args)
       break;
     case COMMANDS.mv:
-      move(currentDirectory, args)
+      moveFile(currentDirectory, args)
+      break;
     case COMMANDS.rm:
-      const fileToDelete = path.resolve(currentDirectory, args[0]);
-      fs.unlink(fileToDelete, (err) => {
-        if (err) {
-          console.log('Operation failed');
-        } else {
-          console.log(`${args[0]} deleted`);
-        }
-      });
+      deleteFile(currentDirectory, args)
       break;
     case COMMANDS.zip:
       const sourceFolder = path.resolve(currentDirectory, args[0]);

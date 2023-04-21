@@ -1,5 +1,5 @@
-import { createReadStream, createWriteStream } from 'fs';
-import { Writable } from 'stream';
+import {createReadStream, createWriteStream} from 'fs';
+import {Writable} from 'stream';
 import fs from 'fs'
 import path from 'path';
 
@@ -12,7 +12,7 @@ export const readAndPrint = (currentDirectory, args) => {
 
     const filePath = path.resolve(currentDirectory, args[0]);
 
-    const readStream = createReadStream(filePath, { encoding: 'utf8' });
+    const readStream = createReadStream(filePath, {encoding: 'utf8'});
 
     readStream.on('data', (chunk) => {
         process.stdout.write(chunk);
@@ -70,18 +70,19 @@ export const copy = (currentDirectory, args) => {
     const source = createReadStream(path.resolve(currentDirectory, args[0]));
     const destination = createWriteStream(path.resolve(currentDirectory, destinationFilePath));
     source.on('error', (error) => {
-      console.log(`Operation failed beacause on sourcec stream ${error}`);
+        console.log(`Operation failed beacause on sourcec stream ${error}`);
     });
     destination.on('error', (error) => {
-      console.log(`Operation failed beacause on destination stream ${error}`);
+        console.log(`Operation failed beacause on destination stream ${error}`);
     });
     destination.on('close', () => {
-      console.log(`${args[0]} copied to ${args[1]}`);
+        console.log(`${args[0]} copied to ${args[1]}`);
     });
     source.pipe(destination);
 }
 
-export const move = (currentDirectory, args) => {
+export const moveFile = (currentDirectory, args) => {
+
     if (!args || args.length === 0) {
         console.log('Missing argument');
         return;
@@ -93,19 +94,34 @@ export const move = (currentDirectory, args) => {
     const source = createReadStream(path.resolve(currentDirectory, args[0]));
     const destination = createWriteStream(path.resolve(currentDirectory, destinationFilePath));
     source.on('error', (error) => {
-      console.log(`Operation failed beacause on sourcec stream ${error}`);
+        console.log(`Operation failed beacause on sourcec stream ${error}`);
     });
     destination.on('error', (error) => {
-      console.log(`Operation failed beacause on destination stream ${error}`);
+        console.log(`Operation failed beacause on destination stream ${error}`);
     });
+    destination.on('close', () => {
+        console.log(`${args[0]} copied to ${args[1]}`);
+    });
+    source.pipe(destination);
+
     destination.on('finish', () => {
         fs.unlink(path.resolve(currentDirectory, args[0]), (err) => {
             if (err) {
-              console.error(`Error deleting file: ${err}`);
+                console.error(`Error deleting file: ${err}`);
             } else {
-              console.log(`${path.resolve(currentDirectory, args[0])} was successfully moved to ${targetDirectory}`);
+                console.log(`${path.resolve(currentDirectory, args[0])} was successfully moved to ${path.resolve(currentDirectory, args[0])}`);
             }
-          });
+        });
     })
-    source.pipe(destination);
+}
+
+export const deleteFile = (currentDirectory, args) => {
+    const fileToDelete = path.resolve(currentDirectory, args[0]);
+    fs.unlink(fileToDelete, (err) => {
+        if (err) {
+            console.log('Operation failed');
+        } else {
+            console.log(`${args[0]} deleted`);
+        }
+    });
 }
