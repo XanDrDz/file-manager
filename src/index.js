@@ -1,6 +1,6 @@
 import { printUserInfo } from './user.js'
 import { Transform } from 'stream';
-import { homeDir } from './system-info.js';
+import {checkOS, homeDir} from './system-info.js';
 import readline from 'readline';
 import { getUpperDirectory } from './navigation.js';
 import { getUserName } from './user.js';
@@ -65,6 +65,9 @@ rl.on('line', (input) => {
       break;
     case COMMANDS.rm:
       deleteFile(currentDirectory, args)
+      break;
+    case COMMANDS.os:
+      checkOS(args)
       break;
     case COMMANDS.zip:
       const sourceFolder = path.resolve(currentDirectory, args[0]);
