@@ -10,6 +10,7 @@ import {readAndPrint, addFile, rename, copy, moveFile, deleteFile} from './basic
 import path from 'path';
 import fs from 'fs'
 import {createHash} from "./hash-calculation.js";
+import {compressFile, decompressFile} from "./compress-decompress.js";
 
 process.chdir(homeDir);
 
@@ -70,69 +71,11 @@ rl.on('line', (input) => {
     case COMMANDS.os:
       checkOS(args)
       break;
-    case COMMANDS.zip:
-      const sourceFolder = path.resolve(currentDirectory, args[0]);
-      const zipFileName = `${args[0]}.zip`;
-      const destinationZip = createWriteStream(path.resolve(currentDirectory, zipFileName));
-      const zip = createBrotliCompress();
-      destinationZip.on('error', () => {
-        console.log('Operation failed');
-      });
-      destinationZip.on('close', () => {
-        console.log(`${args[0]} zipped to ${zipFileName}`);
-      });
-      fs.readdir(sourceFolder, (err, files) => {
-        if (err) {
-          console.log('Operation failed');
-        } else {
-          files.forEach((file) => {
-            const fileToCompress = path.resolve(sourceFolder, file);
-            const readStream = createReadStream(fileToCompress);
-            readStream.on('error', () => {
-              console.log('Operation failed');
-            });
-            readStream.pipe(zip, { end: false });
-          });
-          zip.pipe(destinationZip);
-          zip.on('end', () => {
-            destinationZip.end();
-          });
-        }
-      });
+    case COMMANDS.compress:
+      compressFile(currentDirectory, args)
       break;
-    case COMMANDS.unzip:
-      const zipFilePath = path.resolve(currentDirectory, args[0]);
-      const destinationFolder = path.resolve(currentDirectory, args[1]);
-      const unzip = createBrotliDecompress();
-      const zipReadStream = createReadStream(zipFilePath);
-      zipReadStream.on('error', () => {
-        console.log('Operation failed');
-      });
-      unzip.on('error', () => {
-        console.log('Operation failed');
-      });
-      unzip.on('close', () => {
-        console.log(`${args[0]} unzipped to ${args[1]}`);
-      });
-      fs.mkdir(destinationFolder, { recursive: true }, (err) => {
-        if (err) {
-          console.log('Operation failed');
-        } else {
-          zipReadStream.pipe(unzip);
-          unzip.on('entry', (entry) => {
-            const filePath = path.resolve(destinationFolder, entry.name);
-            if (entry.isDirectory()) {
-              fs.mkdirSync(filePath, { recursive: true });
-            } else {
-              const writeStream = createWriteStream(filePath);
-              writeStream.on('error', () => {
-                console.log('Operation failed');
-              });
-              unzip.pipe(writeStream);
-            }
-          });
-        }
-      });
+    case COMMANDS.decompress:
+      decompressFile(currentDirectory, args)
       break;
     case COMMANDS.hash:
       createHash(currentDirectory, args)
