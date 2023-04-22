@@ -9,6 +9,7 @@ import { printAllFiles } from './navigation.js'
 import {readAndPrint, addFile, rename, copy, moveFile, deleteFile} from './basic-operations.js'
 import path from 'path';
 import fs from 'fs'
+import {createHash} from "./hash-calculation.js";
 
 process.chdir(homeDir);
 
@@ -134,20 +135,7 @@ rl.on('line', (input) => {
       });
       break;
     case COMMANDS.hash:
-      const algorithm = args[0];
-      const fileToHash = path.resolve(currentDirectory, args[1]);
-      const hash = crypto.createHash(algorithm);
-      const readHashStream = createReadStream(fileToHash);
-      readHashStream.on('error', () => {
-        console.log('Operation failed');
-      });
-      hash.on('readable', () => {
-        const data = hash.read();
-        if (data) {
-          console.log(data.toString('hex'));
-        }
-      });
-      readHashStream.pipe(hash);
+      createHash(currentDirectory, args)
       break;
     case '.exit':
       console.log(goodbyeMsg);
