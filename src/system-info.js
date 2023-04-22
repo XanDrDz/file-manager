@@ -40,6 +40,6 @@ export const checkOS = (args) => {
             console.log(`CPU architecture : ${process.arch}`);
             break;
         default:
-            console.log('Unknown command');
+            console.log('Unknown OS command. Please write correct command');
     }
 }

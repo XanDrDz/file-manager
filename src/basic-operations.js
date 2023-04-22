@@ -1,5 +1,4 @@
 import {createReadStream, createWriteStream} from 'fs';
-import {Writable} from 'stream';
 import fs from 'fs'
 import path from 'path';
 
@@ -42,15 +41,25 @@ export const addFile = (currentDirectory, args) => {
 
 export const rename = (currentDirectory, args) => {
     if (!args || args.length === 0) {
-        console.log('Missing argument');
+        console.log('Missing arguments');
+        return;
+    }
+
+    if (!args[1]) {
+        console.log('Missing argument, please input 2 arguments');
         return;
     }
 
     const oldPath = path.resolve(currentDirectory, args[0]);
-    const newPath = path.resolve(currentDirectory, args[1]);
+    const oldPathDirName = path.dirname(args[0])
+    console.log(oldPathDirName)
+    const newRawPath = path.join(oldPathDirName, args[1])
+    const newPath = path.resolve(currentDirectory, newRawPath);
+    console.log(newPath)
+
     fs.rename(oldPath, newPath, (err) => {
         if (err) {
-            console.log('Operation failed');
+            console.log(`Operation failed ${err}`);
         } else {
             console.log(`${args[0]} renamed to ${args[1]}`);
         }
@@ -59,7 +68,12 @@ export const rename = (currentDirectory, args) => {
 
 export const copy = (currentDirectory, args) => {
     if (!args || args.length === 0) {
-        console.log('Missing argument');
+        console.log('Missing arguments');
+        return;
+    }
+
+    if (!args[1]) {
+        console.log('Missing argument, please input 2 arguments');
         return;
     }
 
@@ -85,6 +99,11 @@ export const moveFile = (currentDirectory, args) => {
 
     if (!args || args.length === 0) {
         console.log('Missing argument');
+        return;
+    }
+
+    if (!args[1]) {
+        console.log('Missing argument, please input 2 arguments');
         return;
     }
 
@@ -116,6 +135,11 @@ export const moveFile = (currentDirectory, args) => {
 }
 
 export const deleteFile = (currentDirectory, args) => {
+    if (!args || args.length === 0) {
+        console.log('Missing argument');
+        return;
+    }
+
     const fileToDelete = path.resolve(currentDirectory, args[0]);
     fs.unlink(fileToDelete, (err) => {
         if (err) {

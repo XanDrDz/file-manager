@@ -1,8 +1,6 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
 import os from "os"
 
-export const UNKNOWN_USER = 'Anonymous'
+export let UNKNOWN_USER = 'Anonymous'
 export const currentUser = process.argv.slice(2).at(-1)
 export let USER = ''
 

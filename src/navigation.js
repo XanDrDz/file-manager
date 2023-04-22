@@ -14,7 +14,6 @@ export const getUpperDirectory = (currentDirectory) => {
 }
 
 export const printAllFiles = async (currentDirectory) => {
-  console.log(currentDirectory)
   let files = await fs.promises.readdir(currentDirectory, {withFileTypes:true})
   let sortedFiles = files.sort((a,b) => a.isFile() - b.isFile())
   let res = sortedFiles.map((elem)=> ({Name: elem.name, Type: elem.isFile() ? 'file' : 'directory'}))
